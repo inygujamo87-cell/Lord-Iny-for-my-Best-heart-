@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Minha Princesa Lorel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffb6c1, #dda0dd);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: inherit;
+            padding: 20px;
+        }
+
+        .active {
+            display: flex;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Estilos comuns para bordas */
+        .fof-border {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 95%;
+            max-height: 90%;
+        }
+
+        /* Página 1 - Loading */
+        #loading {
+            flex-direction: column;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff69b4, #ff1493);
+            border-radius: 10px;
+            animation: loading 3s ease-in-out forwards;
+        }
+
+        @keyframes loading {
+            to { width: 100%; }
+        }
+
+        .welcome-text {
+            color: white;
+            font-size: 1.5em;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Página 2 - Senha */
+        .password-input {
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.1em;
+            margin: 15px 0;
+            width: 100%;
+        }
+
+        .password-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .correct { border-color: #90ee90; background: rgba(144, 238, 144, 0.2); }
+        .incorrect { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.2); }
+
+        /* Página 3 - Permissão Música */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+
+        .btn-fofo {
+            padding: 12px 30px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-fofo:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Página 4 - Poesia e Menu */
+        .poesia-container {
+            max-width: 100%;
+            margin: 0 auto;
+            text-align: center;
+            overflow-y: auto;
+            max-height: 80vh;
+            padding: 20px;
+        }
+
+        .poesia-text {
+            color: white;
+            font-size: 1.4em;
+            line-height: 1.8;
+            font-family: 'Dancing Script', cursive;
+            opacity: 0;
+            animation: typing 6s ease-in-out forwards;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        @keyframes typing {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Menu - TRÊS TRACINHOS BEM VISÍVEIS */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-line {
+            width: 30px;
+            height: 4px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover .menu-line {
+            background: #ff69b4;
+        }
+
+        .menu-content {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 15px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            min-width: 200px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-btn-item {
+            padding: 12px 20px;
+            border: 2px solid rgba(255, 182, 193, 0.5);
+            border-radius: 15px;
+            background: linear-gradient(135deg, #ffb6c1, #dda0dd);
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .menu-btn-item:hover {
+            background: linear-gradient(135deg, #ff69b4, #ee82ee);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .config-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.5em;
+            color: white;
+            z-index: 1000;
+        }
+
+        .config-content {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            min-width: 200px;
+        }
+
+        .theme-option {
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+
+        .lilas { background: #dda0dd; }
+        .rosa { background: #ffb6c1; }
+        .azul { background: #87ceeb; }
+        .violenta { background: #ee82ee; }
+
+        .ceo-info {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .ceo-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Página 5 - Galeria */
+        .gallery-container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .gallery {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 0 auto 30px;
+        }
+
+        .gallery-img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            opacity: 0;
+            animation: slideShow 8s infinite;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .gallery-img:nth-child(1) { animation-delay: 0s; }
+        .gallery-img:nth-child(2) { animation-delay: 2s; }
+        .gallery-img:nth-child(3) { animation-delay: 4s; }
+        .gallery-img:nth-child(4) { animation-delay: 6s; }
+
+        @keyframes slideShow {
+            0%, 20% { opacity: 1; }
+            25%, 100% { opacity: 0; }
+        }
+
+        .floating-bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: floatUp 8s linear infinite;
+        }
+
+        @keyframes floatUp {
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Botão Voltar */
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        /* Poesia Longa */
+        .long-poetry {
+            font-size: 1.3em;
+            line-height: 2;
+            text-align: left;
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        /* Página Secreta */
+        .love-text {
+            font-size: 4em;
+            color: white;
+            text-align: center;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Página 1 - Loading -->
+    <div id="page1" class="page active">
+        <div class="fof-border">
+            <div class="welcome-text">Seja bem-vinda princesa!</div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Página 2 - Senha -->
+    <div id="page2" class="page">
+        <div class="fof-border" style="width: 400px;">
+            <h2 style="color: white; text-align: center; margin-bottom: 20px;">Digite a Senha</h2>
+            <input type="password" class="password-input" id="senhaInput" placeholder="Digite a senha...">
+            <button class="btn-fofo" onclick="verificarSenha()" style="width: 100%;">Confirmar</button>
+        </div>
+    </div>
+
+    <!-- Página 3 - Permissão Música -->
+    <div id="page3" class="page">
+        <div class="fof-border" style="width: 500px;">
+            <h2 style="color: white; text-align: center;">Permissão para Música</h2>
+            <p style="color: white; text-align: center; margin: 20px 0;">Posso tocar uma música especial para você?</p>
+            <div class="btn-group">
+                <button class="btn-fofo" onclick="escolherMusica(true)">Sim</button>
+                <button class="btn-fofo" onclick="escolherMusica(false)">Não</button>
+            </div>
+            <div id="nomeContainer" style="display: none;">
+                <p style="color: white; text-align: center; margin: 20px 0; opacity: 0; animation: fadeIn 2s ease 0.5s forwards;">
+                    O Lord Iny pede por favor digite seu nome minha princesa!
+                </p>
+                <input type="text" class="password-input" id="nomeInput" placeholder="Seu nome...">
+                <button class="btn-fofo" onclick="confirmarNome()" style="width: 100%;">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Página 4 - Poesia -->
+    <div id="page4" class="page">
+        <!-- Menu COM TRÊS TRACINHOS BEM VISÍVEIS -->
+        <button class="menu-btn" onclick="toggleMenu()">
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+        </button>
+
+        <div class="menu-content" id="menuContent">
+            <button class="menu-btn-item" onclick="abrirLink('whatsapp')">📱 WhatsApp</button>
+            <button class="menu-btn-item" onclick="abrirLink('biblia')">📖 Bíblia</button>
+            <button class="menu-btn-item" onclick="abrirLink('diario')">📔 Diário</button>
+            <button class="menu-btn-item" onclick="abrirLink('fotos')">🖼️ Central Fotos</button>
+            <button class="menu-btn-item" onclick="abrirLink('senior')">🤖 Sénior IA</button>
+            <button class="menu-btn-item" onclick="mostrarPoemas()">📜 Poemas Especiais</button>
+            <button class="menu-btn-item" onclick="mostrarPaginaSecreta()">🔒 Segredo</button>
+        </div>
+
+        <!-- Configurações -->
+        <button class="config-btn" onclick="toggleConfig()">⚙️</button>
+
+        <div class="config-content" id="configContent">
+            <h4 style="color: #666; margin-bottom: 10px;">Temas de Cores:</h4>
+            <button class="theme-option lilas" onclick="mudarTema('lilas')">Lilás</button>
+            <button class="theme-option rosa" onclick="mudarTema('rosa')">Rosa</button>
+            <button class="theme-option azul" onclick="mudarTema('azul')">Azul</button>
+            <button class="theme-option violenta" onclick="mudarTema('violenta')">Violeta</button>
+            
+            <div style="margin: 15px 0; border-top: 1px solid #ccc; padding-top: 10px;">
+                <button class="btn-fofo" onclick="pausarMusica()" style="width: 100%; margin-bottom: 5px;">⏸️ Pausar Música</button>
+                <button class="btn-fofo" onclick="retomarMusica()" style="width: 100%;">▶️ Retomar Música</button>
+            </div>
+
+            <div class="ceo-info">
+                <img src="https://i.postimg.cc/Jz6M4j21/IMG-20250312-WA0022.jpg" alt="Lord Iny" class="ceo-photo">
+                <p style="color: #666; font-size: 0.9em;">Lord Iny - CEO</p>
+                <p style="color: #888; font-size: 0.8em; margin-top: 5px;">Empresa Sénior em execução</p>
+            </div>
+
+            <button class="btn-fofo" onclick="toggleConfig()" style="width: 100%; margin-top: 10px;">Fechar</button>
+        </div>
+
+        <!-- Poesia -->
+        <div class="poesia-container">
+            <div class="poesia-text long-poetry" id="poesiaText">
+                Nos teus olhos encontrei o meu refúgio,<br>
+                No teu sorriso descobri a paz,<br>
+                Em cada gesto teu, uma promessa,<br>
+                Em cada palavra, o amor que não tem fim.<br><br>
+
+                Como as estrelas que brilham na escuridão,<br>
+                Teu amor ilumina minha vida,<br>
+                Cada momento contigo é uma bênção,<br>
+                Cada instante uma eternidade vivida.<br><br>
+
+                Nos teus braços encontrei meu lar,<br>
+                No teu coração, meu lugar no mundo,<br>
+                Contigo aprendi a sonhar,<br>
+                E em teus olhos me perdi, profundo.<br><br>
+
+                O tempo passa, mas não nosso amor,<br>
+                Que cresce a cada dia que passa,<br>
+                És a melodia do meu coração,<br>
+                A razão da minha mais linda dança.<br><br>
+
+                Por você, minha princesa Lorel,<br>
+                Cruzaria oceanos e montanhas,<br>
+                Pois o nosso amor é tão fiel,<br>
+                Que até as estrelas se espantam.
+            </div>
+            <button class="btn-fofo" style="margin-top: 20px;" onclick="mostrarPagina('page5')">
+                Ver Nossa Galeria
+            </button>
+        </div>
+        <button class="back-btn" onclick="voltarPagina()">Voltar</button>
+    </div>
+
+    <!-- Página 5 - Galeria -->
+    <div id="page5" class="page">
+        <div class="floating-bubbles" id="bubblesContainer"></div>
+        <div class="gallery-container">
+            <div class="gallery">
+                <img src="https://i.postimg.cc/YCn3WLt0/In-Shot-20251105-210029849.jpg" class="gallery-img" alt="Nosso momento 1">
+                <img src="https://i.postimg.cc/dV4WjSj3/In-Shot-20251105-210216371.jpg" class="gallery-img" alt="Nosso momento 2">
+                <img src="https://i.postimg.cc/fTYpmKPf/In-Shot-20251105-210847936.jpg" class="gallery-img" alt="Nosso momento 3">
+                <img src="https://i.postimg.cc/Wzvt38KX/In-Shot-20251105-210951625.jpg" class="gallery-img" alt="Nosso momento 4">
+            </div>
+            <div class="poesia-text long-poetry">
+                O amor do Lord Iny por Lorel é como um rio que nunca para de correr,<br>
+                É como o vento que nunca deixa de soprar,<br>
+                É como o sol que sempre volta a brilhar.<br><br>
+
+                Em cada olhar teu, vejo o infinito,<br>
+                Em cada toque teu, sinto a eternidade,<br>
+                Em cada palavra tua, ouço a verdade.<br><br>
+
+                Nosso amor é uma história escrita nas estrelas,<br>
+                Uma sinfonia que ecoa no universo,<br>
+                Um poema que nunca terá versos finais.<br><br>
+
+                Atravessamos tempos e distâncias,<br>
+                Superamos desafios e provações,<br>
+                Porque nosso amor é feito de paciência e devoção.<br><br>
+
+                Lorel, minha princesa, minha rainha,<br>
+                És a razão do meu sorriso a cada dia,<br>
+                És a musa que inspira minha poesia.<br><br>
+
+                Que nossa história continue a ser escrita,<br>
+                Com letras de ouro no livro da vida,<br>
+                Porque contigo, minha amada, cada momento vale a pena.
+            </div>
+        </div>
+        <button class="back-btn" onclick="voltarPagina()">Voltar</button>
+    </div>
+
+    <!-- Página de Poemas -->
+    <div id="pagePoemas" class="page">
+        <div class="poesia-container">
+            <div class="long-poetry" style="color: white; font-family: 'Dancing Script', cursive;">
+                <h3 style="text-align: center; margin-bottom: 20px;">Poemas do Amor Eterno</h3>
+                
+                <div style="margin-bottom: 30px;">
+                    <h4>Poema da Nossa Primeira Estrela</h4>
+                    <p>Quando te vi pela primeira vez,<br>
+                    O mundo parou, o tempo congelou,<br>
+                    Nos teus olhos eu me perdi,<br>
+                    E no teu sorriso me encontrei.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h4>Canção do Coração</h4>
+                    <p>Meu coração bate em compasso diferente,<br>
+                    Desde que te conheci, desde esse momento,<br>
+                    É uma melodia suave e envolvente,<br>
+                    Que só com você faz sentido plenamente.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h4>Promessa Eterna</h4>
+                    <p>Prometo te amar em todos os dias,<br>
+                    Nas manhãs ensolaradas e nas noites frias,<br>
+                    Nos momentos de riso e nas lágrimas,<br>
+                    Serei teu porto seguro, tuas asas.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h4>Sonho de Lord Iny</h4>
+                    <p>Sonho com um futuro ao teu lado,<br>
+                    Onde nosso amor seja sempre celebrado,<br>
+                    Onde cada amanhecer seja abençoado,<br>
+                    Pela luz do teu olhar adorado.</p>
+                </div>
+            </div>
+        </div>
+        <button class="back-btn" onclick="voltarPagina()">Voltar</button>
+    </div>
+
+    <!-- Página Secreta -->
+    <div id="pageSecreta" class="page">
+        <div class="love-text" id="loveText">Eu te amo</div>
+        <button class="back-btn" onclick="voltarPagina()">Voltar</button>
+    </div>
+
+    <!-- Áudio -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        // Controle de páginas
+        let currentPage = 1;
+        const totalPages = 5;
+        let musicStarted = false;
+
+        // Inicialização
+        setTimeout(() => {
+            mostrarPagina('page2');
+        }, 3000);
+
+        function mostrarPagina(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            currentPage = parseInt(pageId.replace('page', '')) || 1;
+        }
+
+        function proximaPagina() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                mostrarPagina('page' + currentPage);
+            }
+        }
+
+        function voltarPagina() {
+            if (currentPage > 1) {
+                currentPage--;
+                mostrarPagina('page' + currentPage);
+            }
+        }
+
+        // Verificação de senha
+        function verificarSenha() {
+            const input = document.getElementById('senhaInput');
+            const senhaCorreta = "seniorlordinylorel";
+            
+            if (input.value === senhaCorreta) {
+                input.classList.add('correct');
+                input.classList.remove('incorrect');
+                setTimeout(() => {
+                    mostrarPagina('page3');
+                }, 1000);
+            } else {
+                input.classList.add('incorrect');
+                input.classList.remove('correct');
+            }
+        }
+
+        // CORREÇÃO: Digitar nome aparece tanto no SIM quanto no NÃO
+        function escolherMusica(querMusica) {
+            const nomeContainer = document.getElementById('nomeContainer');
+            nomeContainer.style.display = 'block';
+            
+            if (querMusica) {
+                iniciarMusica();
+            }
+        }
+
+        function iniciarMusica() {
+            const music = document.getElementById('backgroundMusic');
+            musicStarted = true;
+            
+            // Tocar música
+            music.play().catch(e => {
+                console.log('Reprodução automática bloqueada:', e);
+            });
+        }
+
+        function pausarMusica() {
+            const music = document.getElementById('backgroundMusic');
+            music.pause();
+        }
+
+        function retomarMusica() {
+            const music = document.getElementById('backgroundMusic');
+            if (musicStarted) {
+                music.play();
+            }
+        }
+
+        function confirmarNome() {
+            const nome = document.getElementById('nomeInput').value;
+            if (nome.trim() !== '') {
+                mostrarPagina('page4');
+            }
+        }
+
+        // Menu e configurações
+        function toggleMenu() {
+            const menu = document.getElementById('menuContent');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function toggleConfig() {
+            const config = document.getElementById('configContent');
+            config.style.display = config.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function mudarTema(cor) {
+            const gradients = {
+                lilas: ['#dda0dd', '#ee82ee'],
+                rosa: ['#ffb6c1', '#ff69b4'],
+                azul: ['#87ceeb', '#6495ed'],
+                violenta: ['#ee82ee', '#da70d6']
+            };
+            
+            document.body.style.background = `linear-gradient(135deg, ${gradients[cor][0]}, ${gradients[cor][1]})`;
+        }
+
+        function abrirLink(tipo) {
+            const links = {
+                whatsapp: 'https://wa.me/556285665254',
+                biblia: '#',
+                diario: 'https://inygujamo87-cell.github.io/S-nior-di-rio-pessoal-/',
+                fotos: 'https://inygujamo87-cell.github.io/Central-da-foto-S-nior/',
+                senior: 'https://inygujamo87-cell.github.io/S-nior-IA-iny/'
+            };
+            if (links[tipo] !== '#') {
+                window.open(links[tipo], '_blank');
+            }
+        }
+
+        function mostrarPoemas() {
+            mostrarPagina('pagePoemas');
+        }
+
+        function mostrarPaginaSecreta() {
+            const senha = prompt("Digite a senha especial:");
+            if (senha === "inylorel") {
+                mostrarPagina('pageSecreta');
+                // Adicionar efeitos especiais
+                criarEfeitosAmor();
+            } else if (senha) {
+                alert("Senha incorreta! Tente novamente.");
+            }
+        }
+
+        // Bolhas flutuantes
+        function criarBolhas() {
+            const container = document.getElementById('bubblesContainer');
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'bubble';
+                    const size = Math.random() * 20 + 10;
+                    bubble.style.width = size + 'px';
+                    bubble.style.height = size + 'px';
+                    bubble.style.left = Math.random() * 100 + 'vw';
+                    bubble.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                    container.appendChild(bubble);
+                    
+                    // Remover bolha após animação
+                    setTimeout(() => {
+                        bubble.remove();
+                    }, 15000);
+                }, i * 500);
+            }
+        }
+
+        // Efeitos especiais para página secreta
+        function criarEfeitosAmor() {
+            const container = document.getElementById('pageSecreta');
+            const cores = ['#ff69b4', '#ff1493', '#dc143c', '#ffb6c1'];
+            
+            setInterval(() => {
+                const coracao = document.createElement('div');
+                coracao.innerHTML = '❤️';
+                coracao.style.position = 'absolute';
+                coracao.style.left = Math.random() * 100 + 'vw';
+                coracao.style.top = '100vh';
+                coracao.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                coracao.style.color = cores[Math.floor(Math.random() * cores.length)];
+                coracao.style.animation = `floatUp ${Math.random() * 5 + 3}s linear forwards`;
+                container.appendChild(coracao);
+                
+                setTimeout(() => {
+                    coracao.remove();
+                }, 8000);
+            }, 300);
+        }
+
+        // Fechar menus ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.menu-btn') && !e.target.closest('.menu-content')) {
+                document.getElementById('menuContent').style.display = 'none';
+            }
+            if (!e.target.closest('.config-btn') && !e.target.closest('.config-content')) {
+                document.getElementById('configContent').style.display = 'none';
+            }
+        });
+
+        // Inicializar bolhas
+        setInterval(criarBolhas, 2000);
+        criarBolhas();
+    </script>
+</body>
+</html>
